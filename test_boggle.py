@@ -1,5 +1,6 @@
 import unittest
 import boggle
+from string import ascii_uppercase
 
 class TestBoggle(unittest.TestCase):
     """
@@ -36,8 +37,50 @@ class TestBoggle(unittest.TestCase):
         self.assertIn((1, 1), grid) # Ditto for (1, 1) coordinates
         self.assertNotIn((2, 2), grid) # Test to make sure (2, 2) coordinates dont appear in a 2 x 2 grid
          
-         
-         
+    def test_grid_is_filled_with_letters(self):
+        """
+        Ensure that each coordinates in the grid
+        contains letters
+        """
+        
+        grid = boggle.make_grid(2, 3)
+        for letter in grid.values(): # At present, test will fail as no letters in grid, only empty spaces.
+            self.assertIn(letter, ascii_uppercase)
+            
+    def test_neighbours_of_a_position(self):
+        """
+        Ensure that a position has 8 neighboours
+        """
+        
+        coords = (1, 2)
+        neighbours = boggle.neighbours_of_position(coords)
+        self.assertIn((0, 1), neighbours)
+        self.assertIn((0, 2), neighbours)
+        self.assertIn((0, 3), neighbours)
+        self.assertIn((1, 1), neighbours)
+        self.assertIn((1, 3), neighbours)
+        self.assertIn((0, 1), neighbours)
+        self.assertIn((2, 1), neighbours)
+        self.assertIn((2, 2), neighbours)
+        self.assertIn((2, 3), neighbours)
+        
+    def test_all_grid_neighbours(self):
+        """
+        Ensure that all of the grid positions have neighbours. 
+        Creation of 2 x 2 grid allows for all grid spaces to be captured
+        within the overall 3 x 3 grid. Upto x4 of (2x2) grids in overall
+        3 x 3 grid
+        """
+    
+        grid = boggle.make_grid(2, 2)
+        neighbours = boggle.all_grid_neighbours(grid)
+        self.assertEqual(len(neighbours), len(grid))
+        for pos in grid:
+            others = list(grid) # Creates a new list from the dictionaries keys
+            others.remove(pos)
+            self.assertListEqual(sorted(neighbours[pos]), sorted(others)) # Asserts the positions of neighbours being checked. 
+            
+            
          
         
     
