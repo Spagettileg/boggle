@@ -1,10 +1,60 @@
-def make_grid(width, height):
+from string import ascii_uppercase
+from random import choice # Choice function returns an item from a list at random.
+
+def make_grid(width, height): 
     """
     Creates a grid that will hold all of the tiles
     for a boggle game
     """
     
-    return {(row, col): ' ' for row in range(height) # This function creates a dictionary with row & col.
+    return {(row, col): choice(ascii_uppercase) # This function creates a dictionary with row & col.
+        for row in range(height) 
         for col in range(width)}
+    
+def neighbours_of_position(coords):
+    """
+    Get neighbours of a given position
+    """
+    
+    row = coords[0] # Assign each number to a variable
+    col = coords[1]
+    
+    # Assign each of the neighbours
+    # Top-Left to Top-Right
+    
+    top_left = (row -1, col -1) # This is always the origin / start point in python (top-left).
+    top_center = (row -1, col)
+    top_right = (row -1, col +1)
+    
+    # Left to Right
+    left = (row, col -1)
+    right = (row, col +1)
+    
+    # Botton-Left to Bottom-Right
+    bottom_left = (row +1, col -1)
+    bottom_center = (row +1, col)
+    bottom_right = (row +1, col +1)
+    
+    return [top_left, top_center, top_right,
+            left, right,
+            bottom_left, bottom_center, bottom_right]
+            
+def all_grid_neighbours(grid): 
+    """
+    'Grid' argument gets all of the possible neighbours
+    in each position in the grid.
+    """
+    
+    neighbours = {} # Gets all the possible neighbours by calling the 'neighbours' function
+    for position in grid:
+        position_neighbours = neighbours_of_position(position)
+        neighbours[position] = [p for p in position_neighbours if p in grid]
+        
+    return neighbours
+    
+        
+        
+    
+    
     
     
