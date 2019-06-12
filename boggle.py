@@ -67,12 +67,15 @@ def search(grid, dictionary):
     
     neighbours = all_grid_neighbours(grid) # Get the neighbours of every position
     paths = [] # Get paths list to capture all paths
+    full_words, stems = dictionary # Unpack the dictionary tuple into stems & full words  
     
     def do_search(path):
         word = path_to_word(grid, path)
-        if word in dictionary:
+        if word in full_words:
             paths.append(path)
-        for next_pos in neighbours[path[-1]]:
+        if word not in stems:
+            return
+        for next_pos in neighbours[path[-1]]: # '-1' refers to the last item in the list path being chosen
             if next_pos not in path:
                 do_search(path + [next_pos])
                 
@@ -88,9 +91,23 @@ def get_dictionary(dictionary_file):
     """
     Dictionary code that loads the dictionary_file
     """
+    full_words, stems = set(), set () # Dictionary function is now returning a tuple of x2 sets
     
     with open(dictionary_file) as f:
-        return [w.strip().upper() for w in f]
+        for word in f:
+            word = word.strip().upper()
+            full_words.add(word)
+            
+            for i in range(1, len(word)):
+                stems.add(word[:i])
+                
+                
+    return full_words, stems
+        
+def display_words(words):
+    for word in words:
+        print(word)
+    print("Found %s words" % len(words))
         
 def main():
     """
@@ -98,12 +115,10 @@ def main():
     The code below represents a high level of abstraction
     """
     
-    grid = make_grid(3, 3)
+    grid = make_grid(4, 4)
     dictionary = get_dictionary('words.txt')
     words = search(grid, dictionary)
-    for word in words:
-        print(word)
-    print("Found %s words" % len(words))
+    display_words(words)
    
     """
     Code below is required to help avoid running
