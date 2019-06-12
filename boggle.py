@@ -104,10 +104,19 @@ def main():
     for word in words:
         print(word)
     print("Found %s words" % len(words))
+   
+    """
+    Code below is required to help avoid running
+    code when a file is imported. The 'if' statement
+    will only execute when the file is run directly.  
+    Units tests can ow be run without the whole
+    boggle solver running. 
+    """
     
-if __name__ == "__main__":
+if __name__ == "__main__": # We want to conditionally run the main ()
     main()
     
+
     
 
 
